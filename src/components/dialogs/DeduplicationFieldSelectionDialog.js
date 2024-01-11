@@ -22,6 +22,8 @@ function DeduplicationFieldSelectionDialog({
   classes,
   benefitPlan,
 }) {
+  if (!benefitPlan) return null;
+
   const [isOpen, setIsOpen] = useState(false);
 
   const handleOpen = () => {
@@ -41,10 +43,7 @@ function DeduplicationFieldSelectionDialog({
         className={classes.button}
         style={{
           border: '0px',
-          textAlign: 'right',
-          display: 'block',
-          marginLeft: 'auto',
-          marginRight: 0,
+          marginTop: '6px',
         }}
       >
         {formatMessage(intl, 'deduplication', 'deduplicate')}
@@ -98,7 +97,7 @@ function DeduplicationFieldSelectionDialog({
   );
 }
 
-const mapStateToProps = (state, props) => ({
+const mapStateToProps = (state) => ({
   rights: !!state.core && !!state.core.user && !!state.core.user.i_user ? state.core.user.i_user.rights : [],
   confirmed: state.core.confirmed,
 });
