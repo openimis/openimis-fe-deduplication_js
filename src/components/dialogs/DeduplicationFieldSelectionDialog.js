@@ -12,6 +12,7 @@ import {
 import { withTheme, withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import DeduplicationFieldPicker from '../pickers/DeduplicationFieldPicker';
 
 const styles = (theme) => ({
   item: theme.paper.item,
@@ -65,7 +66,14 @@ function DeduplicationFieldSelectionDialog({
         >
           {formatMessageWithValues(intl, 'deduplication', 'deduplicate.title', { benefitPlanName: benefitPlan.name })}
         </DialogTitle>
-        <DialogContent />
+        <DialogContent>
+          <DeduplicationFieldPicker
+            required
+            value={[]}
+            module="deduplication"
+            onChange={() => []}
+          />
+        </DialogContent>
         <DialogActions
           style={{
             display: 'inline',
@@ -75,7 +83,16 @@ function DeduplicationFieldSelectionDialog({
           }}
         >
           <div>
-            <div style={{ float: 'left' }} />
+            <div style={{ float: 'left' }}>
+              <Button
+                onClick={() => []}
+                variant="outlined"
+                autoFocus
+                style={{ margin: '0 16px' }}
+              >
+                {formatMessage(intl, 'deduplication', 'deduplicate.button.showDuplicateSummary')}
+              </Button>
+            </div>
             <div style={{
               float: 'right',
               paddingRight: '16px',
