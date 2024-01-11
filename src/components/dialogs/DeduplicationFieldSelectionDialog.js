@@ -1,31 +1,29 @@
-import React, { useState } from "react";
-import { injectIntl } from "react-intl";
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogTitle from "@material-ui/core/DialogTitle";
+import React, { useState } from 'react';
+import { injectIntl } from 'react-intl';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import {
   formatMessage,
   formatMessageWithValues,
-} from "@openimis/fe-core";
-import { withTheme, withStyles } from "@material-ui/core/styles";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
+} from '@openimis/fe-core';
+import { withTheme, withStyles } from '@material-ui/core/styles';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
 const styles = (theme) => ({
   item: theme.paper.item,
 });
 
-const DeduplicationFieldSelectionDialog = ({
+function DeduplicationFieldSelectionDialog({
   intl,
   classes,
   benefitPlan,
-}) => {
-  console.log('intl', intl);
-
+}) {
   const [isOpen, setIsOpen] = useState(false);
-  
+
   const handleOpen = () => {
     setIsOpen(true);
   };
@@ -36,24 +34,24 @@ const DeduplicationFieldSelectionDialog = ({
 
   return (
     <>
-      <Button 
-        onClick={handleOpen} 
-        variant="outlined" 
-        color="#DFEDEF" 
+      <Button
+        onClick={handleOpen}
+        variant="outlined"
+        color="#DFEDEF"
         className={classes.button}
-        style={{ 
-          border: "0px",
-          textAlign: "right",
-          display: "block",
-          marginLeft: "auto",
-          marginRight: 0
+        style={{
+          border: '0px',
+          textAlign: 'right',
+          display: 'block',
+          marginLeft: 'auto',
+          marginRight: 0,
         }}
       >
-        {formatMessage(intl, "deduplication", "deduplicate")}
+        {formatMessage(intl, 'deduplication', 'deduplicate')}
       </Button>
-      <Dialog 
-        open={isOpen} 
-        onClose={handleClose} 
+      <Dialog
+        open={isOpen}
+        onClose={handleClose}
         PaperProps={{
           style: {
             width: 900,
@@ -61,39 +59,36 @@ const DeduplicationFieldSelectionDialog = ({
           },
         }}
       >
-        <DialogTitle 
-          style={{ 
-            marginTop: "10px",
+        <DialogTitle
+          style={{
+            marginTop: '10px',
           }}
         >
-          Pr
+          {formatMessageWithValues(intl, 'deduplication', 'deduplicate.title', { benefitPlanName: benefitPlan.name })}
         </DialogTitle>
-        <DialogContent>
-          <></>
-        </DialogContent>
-        <DialogActions 
-          style={{ 
-            display: "inline", 
-            paddingLeft: "10px",
-            marginTop: "25px",
-            marginBottom: "15px"  
+        <DialogContent />
+        <DialogActions
+          style={{
+            display: 'inline',
+            paddingLeft: '10px',
+            marginTop: '25px',
+            marginBottom: '15px',
           }}
         >
           <div>
-            <div style={{ float: "left" }}>
-            </div>
-            <div style={{ 
-                float: "right", 
-                paddingRight: "16px" 
-              }}
+            <div style={{ float: 'left' }} />
+            <div style={{
+              float: 'right',
+              paddingRight: '16px',
+            }}
             >
-              <Button 
-                onClick={handleClose} 
-                variant="outlined" 
+              <Button
+                onClick={handleClose}
+                variant="outlined"
                 autoFocus
-                style={{ margin: "0 16px" }} 
+                style={{ margin: '0 16px' }}
               >
-                {formatMessage(intl, "deduplication", "deduplicate.button.cancel")}
+                {formatMessage(intl, 'deduplication', 'deduplicate.button.cancel')}
               </Button>
             </div>
           </div>
@@ -101,7 +96,7 @@ const DeduplicationFieldSelectionDialog = ({
       </Dialog>
     </>
   );
-};
+}
 
 const mapStateToProps = (state, props) => ({
   rights: !!state.core && !!state.core.user && !!state.core.user.i_user ? state.core.user.i_user.rights : [],
@@ -111,4 +106,6 @@ const mapStateToProps = (state, props) => ({
 const mapDispatchToProps = (dispatch) => bindActionCreators({
 }, dispatch);
 
-export default injectIntl(withTheme(withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(DeduplicationFieldSelectionDialog))));
+export default injectIntl(
+  withTheme(withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(DeduplicationFieldSelectionDialog))),
+);

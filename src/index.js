@@ -1,13 +1,12 @@
-import messages_en from "./translations/en.json";
-import DeduplicationFieldSelectionDialog from "./components/dialogs/DeduplicationFieldSelectionDialog";
+import messagesEn from './translations/en.json';
+import DeduplicationFieldSelectionDialog from './components/dialogs/DeduplicationFieldSelectionDialog';
 
 const DEFAULT_CONFIG = {
-  translations: [{ key: "en", messages: messages_en }],
+  translations: [{ key: 'en', messages: messagesEn }],
   'deduplication.deduplicationFieldSelectionDialog': [
-    DeduplicationFieldSelectionDialog
-  ]
-}
+    DeduplicationFieldSelectionDialog,
+  ],
+};
 
-export const DeduplicationModule = (cfg) => {
-  return { ...DEFAULT_CONFIG, ...cfg };
-}
+// eslint-disable-next-line import/prefer-default-export
+export const DeduplicationModule = (cfg) => ({ ...DEFAULT_CONFIG, ...cfg });
