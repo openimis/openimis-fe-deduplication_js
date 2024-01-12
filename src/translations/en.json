@@ -1,2 +1,8 @@
 {
+    "deduplication.deduplicate": "Deduplicate",
+    "deduplication.deduplicate.title": "Deduplication - {benefitPlanName}",
+    "deduplication.deduplicate.button.cancel": "Cancel",
+    "deduplication.deduplicate.fields": "Duplicate Detection Field Selection",
+    "deduplication.deduplicate.fields.placeholder": "Duplicate Detection Field Selection",
+    "deduplicate.button.showDuplicateSummary": "Show Duplicate Summary"
 }
