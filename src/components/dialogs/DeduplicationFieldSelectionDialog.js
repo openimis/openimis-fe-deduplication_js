@@ -25,6 +25,7 @@ function DeduplicationFieldSelectionDialog({
 }) {
   if (!benefitPlan) return null;
 
+  const [selectedValues, setSelectedValues] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
 
   const handleOpen = () => {
@@ -33,6 +34,10 @@ function DeduplicationFieldSelectionDialog({
 
   const handleClose = () => {
     setIsOpen(false);
+  };
+
+  const handlePickerChange = (selectedOptions) => {
+    setSelectedValues(selectedOptions);
   };
 
   return (
@@ -69,9 +74,10 @@ function DeduplicationFieldSelectionDialog({
         <DialogContent>
           <DeduplicationFieldPicker
             required
-            value={[]}
+            value={selectedValues}
             module="deduplication"
-            onChange={() => []}
+            benefitPlan={benefitPlan}
+            onChange={handlePickerChange}
           />
         </DialogContent>
         <DialogActions

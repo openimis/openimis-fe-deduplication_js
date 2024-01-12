@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { useGraphqlQuery, useTranslations, Autocomplete } from '@openimis/fe-core';
+import { useTranslations, Autocomplete } from '@openimis/fe-core';
+import { BASIC_FIELDS } from '../../constants';
 
 function DeduplicationFieldPicker({
   readOnly,
+  benefitPlan,
   value,
   onChange,
   required,
@@ -17,14 +19,10 @@ function DeduplicationFieldPicker({
   const [searchString, setSearchString] = useState();
   const { formatMessage } = useTranslations('deduplication');
 
-  const { isLoading, data, error } = useGraphqlQuery(
-    `
-  `,
-    { str: searchString },
-  );
-
-  const roles = data?.role?.edges.map((edge) => edge.node) ?? [];
-  const uniqueValues = [...new Map(value?.map((role) => [role.id, role])).values()];
+  const beneficiaryDataSchema = JSON.parse(benefitPlan?.beneficiaryDataSchema);
+  const schemaFields = Object.keys(beneficiaryDataSchema?.properties ?? {});
+  const schemaFieldsList = schemaFields.map((key) => ({ id: key, name: key }));
+  const possibleFields = [...schemaFieldsList, ...BASIC_FIELDS];
 
   return (
     <Autocomplete
@@ -32,13 +30,13 @@ function DeduplicationFieldPicker({
       required={required}
       placeholder={placeholder ?? formatMessage('deduplication.deduplicate.fields.placeholder')}
       label={label ?? formatMessage('deduplication.deduplicate.fields')}
-      error={error}
+      error={[]}
       withLabel={withLabel}
       withPlaceholder={withPlaceholder}
       readOnly={readOnly}
-      options={roles}
-      isLoading={isLoading}
-      value={uniqueValues}
+      options={possibleFields}
+      isLoading={false}
+      value={value}
       getOptionLabel={(o) => o?.name}
       onChange={(option) => onChange(option, option?.name)}
       filterOptions={filterOptions}
