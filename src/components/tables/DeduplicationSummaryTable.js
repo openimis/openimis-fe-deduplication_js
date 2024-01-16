@@ -23,30 +23,24 @@ const useStyles = makeStyles((theme) => ({
 
 const DEDUPLICATION_SUMMARY_HEADERS = [
   'deduplication.deduplicationSummaryTable.group',
-  'deduplication.deduplicationSummaryTable.duplicates'
+  'deduplication.deduplicationSummaryTable.duplicates',
 ];
 
-function DeduplicationSummaryTable() {
-  //const dispatch = useDispatch();
+function DeduplicationSummaryTable({
+  columnParam, benefitPlan, fetchDeduplicationSummary,
+}) {
+  const dispatch = useDispatch();
   const modulesManager = useModulesManager();
   const classes = useStyles();
   const { formatMessage } = useTranslations(MODULE_NAME, modulesManager);
-  //const {
-  //  fetchingFamilyMembers, familyMembers, errorFamilyMembers
-  //} = useSelector((store) => store.insuree);
+  const {
+    fetchingSummary, summary, errorSummary,
+  } = useSelector((store) => store.deduplication);
 
-  const results = [
-    {group: "Firstname: John, Surname: Doe, DOB: 1995-01-2020", duplicates: 2},
-    {group: "Firstname: John, Surname: Test, DOB: 1995-01-2020", duplicates: 4},
-    {group: "Firstname: Michael, Surname: Doe, DOB: 1995-01-2020", duplicates: 10},
-    {group: "Firstname :Dennis, Surname: Jin, DOB: 1994-01-2020", duplicates: 20},
-  ];
-
-  //useEffect(() => {
-    //if (!insuree) return;
-
-    //dispatch(fetchFamilyMembers(modulesManager, [`familyUuid: "${insuree.family.uuid}"`]));
-  //}, [insuree]);
+  useEffect(() => {
+    const params = [columnParam, `benefitPlanId: "${benefitPlan.id}"`];
+    dispatch(fetchDeduplicationSummary(params));
+  }, []);
 
   return (
     <TableContainer component={Paper}>
@@ -63,16 +57,17 @@ function DeduplicationSummaryTable() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {results?.map((result) => (
+          <ProgressOrError progress={fetchingSummary} error={errorSummary} />
+          {summary?.map((result) => (
             <TableRow key={result?.uuid}>
               <TableCell>
                 {' '}
-                {result.group}
+                {result.columnValues}
                 {' '}
               </TableCell>
               <TableCell>
                 {' '}
-                {result.duplicates}
+                {result.count}
                 {' '}
               </TableCell>
             </TableRow>

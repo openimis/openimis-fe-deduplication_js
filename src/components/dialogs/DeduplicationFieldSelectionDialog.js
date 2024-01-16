@@ -36,7 +36,6 @@ function DeduplicationFieldSelectionDialog({
 
   const handleClose = () => {
     setIsOpen(false);
-    setSelectedValues([]);
   };
 
   const handlePickerChange = (selectedOptions) => {
@@ -44,8 +43,8 @@ function DeduplicationFieldSelectionDialog({
   };
 
   const handleOpenNextDialog = () => {
-    handleClose();
     setShowSummaryDialog(true);
+    handleClose();
   };
 
   const handleSummaryDialogClose = () => {
@@ -136,6 +135,7 @@ function DeduplicationFieldSelectionDialog({
           benefitPlan={benefitPlan}
           handleClose={handleSummaryDialogClose}
           showSummaryDialog={showSummaryDialog}
+          selectedValues={selectedValues}
         />
       )}
     </>

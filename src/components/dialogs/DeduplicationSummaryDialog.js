@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { injectIntl } from 'react-intl';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -10,6 +10,7 @@ import { withTheme, withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import DeduplicationSummaryTable from '../tables/DeduplicationSummaryTable';
+import { fetchDeduplicationSummary } from '../../actions';
 
 const styles = (theme) => ({
   item: theme.paper.item,
@@ -20,8 +21,13 @@ function DeduplicationSummaryDialog({
   benefitPlan,
   handleClose,
   showSummaryDialog,
+  selectedValues,
 }) {
   if (!benefitPlan) return null;
+
+  // Extract the 'id' values from each object in the array
+  const columns = selectedValues.map((value) => value.id);
+  const columnParam = `columns: ${JSON.stringify(columns)}`;
 
   return (
     <Dialog
@@ -42,7 +48,11 @@ function DeduplicationSummaryDialog({
         {formatMessage(intl, 'deduplication', 'deduplicate.summary.title')}
       </DialogTitle>
       <DialogContent>
-        <DeduplicationSummaryTable />
+        <DeduplicationSummaryTable
+          columnParam={columnParam}
+          benefitPlan={benefitPlan}
+          fetchDeduplicationSummary={fetchDeduplicationSummary}
+        />
       </DialogContent>
       <DialogActions
         style={{
