@@ -42,6 +42,17 @@ function DeduplicationSummaryTable({
     dispatch(fetchDeduplicationSummary(params));
   }, []);
 
+  function reshapeColumnValues(inputString) {
+    const columnValues = JSON.parse(inputString);
+    const formattedValues = Object.entries(columnValues).map(([key, value]) => {
+      const formattedKey = key.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+      const formattedValue = value !== null ? value : 'null';
+      return `${formattedKey}: ${formattedValue}`;
+    });
+    const resultString = formattedValues.join(', ');
+    return resultString;
+  }
+
   return (
     <TableContainer component={Paper}>
       <Table size="small">
@@ -62,7 +73,7 @@ function DeduplicationSummaryTable({
             <TableRow key={result?.uuid}>
               <TableCell>
                 {' '}
-                {result.columnValues}
+                {reshapeColumnValues(result.columnValues)}
                 {' '}
               </TableCell>
               <TableCell>

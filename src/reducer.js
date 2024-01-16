@@ -2,7 +2,6 @@
 /* eslint-disable default-param-last */
 
 import {
-  parseData,
   formatServerError,
 } from '@openimis/fe-core';
 import {
