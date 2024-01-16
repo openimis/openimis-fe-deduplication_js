@@ -25,7 +25,6 @@ function DeduplicationSummaryDialog({
 }) {
   if (!benefitPlan) return null;
 
-  // Extract the 'id' values from each object in the array
   const columns = selectedValues.map((value) => value.id);
   const columnParam = `columns: ${JSON.stringify(columns)}`;
 

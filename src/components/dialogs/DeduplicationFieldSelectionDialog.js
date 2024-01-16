@@ -31,6 +31,7 @@ function DeduplicationFieldSelectionDialog({
   const [showSummaryDialog, setShowSummaryDialog] = useState(false);
 
   const handleOpen = () => {
+    setSelectedValues([]);
     setIsOpen(true);
   };
 
@@ -136,6 +137,7 @@ function DeduplicationFieldSelectionDialog({
           handleClose={handleSummaryDialogClose}
           showSummaryDialog={showSummaryDialog}
           selectedValues={selectedValues}
+          setSelectedValues={setSelectedValues}
         />
       )}
     </>
