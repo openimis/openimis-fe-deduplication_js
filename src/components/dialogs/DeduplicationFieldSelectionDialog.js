@@ -13,6 +13,7 @@ import { withTheme, withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import DeduplicationFieldPicker from '../pickers/DeduplicationFieldPicker';
+import DeduplicationSummaryDialog from './DeduplicationSummaryDialog';
 
 const styles = (theme) => ({
   item: theme.paper.item,
@@ -27,8 +28,10 @@ function DeduplicationFieldSelectionDialog({
 
   const [selectedValues, setSelectedValues] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
+  const [showSummaryDialog, setShowSummaryDialog] = useState(false);
 
   const handleOpen = () => {
+    setSelectedValues([]);
     setIsOpen(true);
   };
 
@@ -38,6 +41,15 @@ function DeduplicationFieldSelectionDialog({
 
   const handlePickerChange = (selectedOptions) => {
     setSelectedValues(selectedOptions);
+  };
+
+  const handleOpenNextDialog = () => {
+    setShowSummaryDialog(true);
+    handleClose();
+  };
+
+  const handleSummaryDialogClose = () => {
+    setShowSummaryDialog(false);
   };
 
   return (
@@ -91,10 +103,11 @@ function DeduplicationFieldSelectionDialog({
           <div>
             <div style={{ float: 'left' }}>
               <Button
-                onClick={() => []}
+                onClick={handleOpenNextDialog}
                 variant="outlined"
                 autoFocus
                 style={{ margin: '0 16px' }}
+                disabled={!selectedValues.length}
               >
                 {formatMessage(intl, 'deduplication', 'deduplicate.button.showDuplicateSummary')}
               </Button>
@@ -116,6 +129,17 @@ function DeduplicationFieldSelectionDialog({
           </div>
         </DialogActions>
       </Dialog>
+
+      {showSummaryDialog && (
+        <DeduplicationSummaryDialog
+          intl={intl}
+          benefitPlan={benefitPlan}
+          handleClose={handleSummaryDialogClose}
+          showSummaryDialog={showSummaryDialog}
+          selectedValues={selectedValues}
+          setSelectedValues={setSelectedValues}
+        />
+      )}
     </>
   );
 }

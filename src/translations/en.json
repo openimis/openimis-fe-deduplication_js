@@ -4,5 +4,9 @@
     "deduplication.deduplicate.button.cancel": "Cancel",
     "deduplication.deduplicate.fields": "Duplicate Detection Field Selection",
     "deduplication.deduplicate.fields.placeholder": "Duplicate Detection Field Selection",
-    "deduplicate.button.showDuplicateSummary": "Show Duplicate Summary"
+    "deduplication.deduplicate.button.showDuplicateSummary": "Show Duplicate Summary",
+    "deduplication.deduplicate.summary.title": "Deduplication Summary",
+    "deduplication.deduplicate.button.createDeduplicationReviewTask": "Create Deduplication Review Tasks",
+    "deduplication.deduplicationSummaryTable.group": "Group",
+    "deduplication.deduplicationSummaryTable.duplicates": "Duplicates"
 }
