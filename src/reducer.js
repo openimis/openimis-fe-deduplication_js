@@ -3,13 +3,16 @@
 
 import {
   formatServerError,
+  dispatchMutationResp,
 } from '@openimis/fe-core';
 import {
   ERROR, REQUEST, SUCCESS,
 } from './util/action-type';
 
 export const ACTION_TYPE = {
+  MUTATION: 'MUTATION',
   GET_DEDUPLICATION_SUMMARY: 'DEDUPLICATION_GET_DEDUPLICATION_SUMMARY',
+  CREATE_DEDUPLICATION_TASKS: 'CREATE_DEDUPLICATION_TASKS',
 };
 
 function reducer(
@@ -47,6 +50,8 @@ function reducer(
         fetchingSummary: false,
         errorSummary: formatServerError(action.payload),
       };
+    case SUCCESS(ACTION_TYPE.CREATE_DEDUPLICATION_TASKS):
+      return dispatchMutationResp(state, 'createDeduplicationTasks', action);
     default:
       return state;
   }

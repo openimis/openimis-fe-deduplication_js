@@ -8,5 +8,6 @@
     "deduplication.deduplicate.summary.title": "Deduplication Summary",
     "deduplication.deduplicate.button.createDeduplicationReviewTask": "Create Deduplication Review Tasks",
     "deduplication.deduplicationSummaryTable.group": "Group",
-    "deduplication.deduplicationSummaryTable.duplicates": "Duplicates"
+    "deduplication.deduplicationSummaryTable.duplicates": "Duplicates",
+    "deduplication.deduplicate.mutation.createTasks": "Deduplication tasks have been created."
 }
