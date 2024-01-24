@@ -18,7 +18,7 @@ const DEFAULT_CONFIG = {
     text: <FormattedMessage module="deduplication" id="tasks.deduplication.title" />,
     tableHeaders: DeduplicationResolutionTaskTableHeaders,
     itemFormatters: DeduplicationResolutionItemFormatters,
-    taskSource: ['BenefitPlanDeduplication'],
+    taskSource: ['CreateDeduplicationReviewTasksService'],
   }],
 };
 

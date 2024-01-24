@@ -9,6 +9,6 @@
     "deduplication.deduplicate.button.createDeduplicationReviewTask": "Create Deduplication Review Tasks",
     "deduplication.deduplicationSummaryTable.group": "Group",
     "deduplication.deduplicationSummaryTable.duplicates": "Duplicates",
-    "deduplication.tasks.deduplication.title": "Benefit Plan Deduplication Task"
+    "deduplication.tasks.deduplication.title": "Benefit Plan Deduplication Task",
     "deduplication.deduplicate.mutation.createTasks": "Deduplication tasks have been created."
 }
