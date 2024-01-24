@@ -27,7 +27,7 @@ const DEDUPLICATION_SUMMARY_HEADERS = [
 ];
 
 function DeduplicationSummaryTable({
-  columnParam, benefitPlan, fetchDeduplicationSummary,
+  columnParam, benefitPlan, fetchDeduplicationSummary, setSummary,
 }) {
   const dispatch = useDispatch();
   const modulesManager = useModulesManager();
@@ -41,6 +41,10 @@ function DeduplicationSummaryTable({
     const params = [columnParam, `benefitPlanId: "${benefitPlan.id}"`];
     dispatch(fetchDeduplicationSummary(params));
   }, []);
+
+  useEffect(() => {
+    setSummary(summary);
+  }, [summary]);
 
   function reshapeColumnValues(inputString) {
     const columnValues = JSON.parse(inputString);

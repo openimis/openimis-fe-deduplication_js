@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { injectIntl } from 'react-intl';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -10,7 +10,7 @@ import { withTheme, withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import DeduplicationSummaryTable from '../tables/DeduplicationSummaryTable';
-import { fetchDeduplicationSummary } from '../../actions';
+import { createDeduplicationTasks, fetchDeduplicationSummary } from '../../actions';
 
 const styles = (theme) => ({
   item: theme.paper.item,
@@ -21,12 +21,22 @@ function DeduplicationSummaryDialog({
   benefitPlan,
   handleClose,
   showSummaryDialog,
+  setShowSummaryDialog,
   selectedValues,
+  createDeduplicationTasks,
 }) {
+  const [summary, setSummary] = useState();
   if (!benefitPlan) return null;
 
   const columns = selectedValues.map((value) => value.id);
   const columnParam = `columns: ${JSON.stringify(columns)}`;
+
+  const onDeduplicationTasksClick = () => {
+    if (summary) {
+      createDeduplicationTasks(summary, formatMessage(intl, 'deduplication', 'deduplicate.mutation.createTasks'));
+    }
+    setShowSummaryDialog(false);
+  };
 
   return (
     <Dialog
@@ -51,6 +61,7 @@ function DeduplicationSummaryDialog({
           columnParam={columnParam}
           benefitPlan={benefitPlan}
           fetchDeduplicationSummary={fetchDeduplicationSummary}
+          setSummary={setSummary}
         />
       </DialogContent>
       <DialogActions
@@ -64,9 +75,10 @@ function DeduplicationSummaryDialog({
         <div>
           <div style={{ float: 'left' }}>
             <Button
-              onClick={() => []}
+              onClick={() => onDeduplicationTasksClick()}
               variant="outlined"
               autoFocus
+              disabled={!summary}
               style={{ margin: '0 16px' }}
             >
               {formatMessage(intl, 'deduplication', 'deduplicate.button.createDeduplicationReviewTask')}
@@ -98,6 +110,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
+  createDeduplicationTasks,
 }, dispatch);
 
 export default injectIntl(

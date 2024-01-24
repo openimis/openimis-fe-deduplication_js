@@ -136,6 +136,7 @@ function DeduplicationFieldSelectionDialog({
           benefitPlan={benefitPlan}
           handleClose={handleSummaryDialogClose}
           showSummaryDialog={showSummaryDialog}
+          setShowSummaryDialog={setShowSummaryDialog}
           selectedValues={selectedValues}
           setSelectedValues={setSelectedValues}
         />
