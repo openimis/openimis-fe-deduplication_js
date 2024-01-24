@@ -32,7 +32,6 @@ function formatDeduplicationTasksMutation(summary) {
   return `summary: [${formattedSummary.join(', ')}]`;
 }
 export function createDeduplicationTasks(summary, clientMutationLabel) {
-  console.log(formatDeduplicationTasksMutation(summary));
   const mutation = formatMutation(
     'createDeduplicationTasks',
     formatDeduplicationTasksMutation(summary),
