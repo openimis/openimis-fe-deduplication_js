@@ -8,19 +8,26 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function BeneficiaryDeduplicationTaskDisplay({
-  businessData, setAdditionalData,
+  businessData, setAdditionalData, jsonExt,
 }) {
+  if (!businessData) return null;
+
   const classes = useStyles();
-  const beneficiaryUuids = (businessData?.ids || []).map((id) => id.uuid);
+  const completedData = jsonExt?.additional_resolve_data
+    ? Object.values(jsonExt.additional_resolve_data)[0].values
+    : null;
   const beneficiaries = (businessData?.ids || []).map((id) => {
-    // eslint-disable-next-line camelcase
-    const { individual, json_ext, ...rest } = id;
+    const {
+      // eslint-disable-next-line camelcase
+      individual, json_ext, uuid, ...rest
+    } = id;
     return {
       ...rest,
       ...individual,
       // eslint-disable-next-line camelcase
       ...json_ext,
       individual: individual.uuid,
+      beneficiaryId: uuid,
     };
   });
 
@@ -31,6 +38,8 @@ function BeneficiaryDeduplicationTaskDisplay({
     headers.splice(individualIndex, 1);
     headers.unshift('individual');
   }
+
+  beneficiaries.sort((a, b) => new Date(a.date_created) - new Date(b.date_created));
 
   return (
     <div>
@@ -47,7 +56,7 @@ function BeneficiaryDeduplicationTaskDisplay({
           headers={headers}
           rows={beneficiaries}
           setAdditionalData={setAdditionalData}
-          beneficiaryUuids={beneficiaryUuids}
+          completedData={completedData}
         />
 
       </div>
@@ -62,6 +71,7 @@ const DeduplicationResolutionItemFormatters = () => [
     <BeneficiaryDeduplicationTaskDisplay
       businessData={businessData}
       setAdditionalData={setAdditionalData}
+      jsonExt={jsonExt}
     />
   ),
 ];

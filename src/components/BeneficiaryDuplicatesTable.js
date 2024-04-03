@@ -14,6 +14,8 @@ const useStyles = makeStyles((theme) => ({
   tableHeader: theme.table.header,
   tableRow: theme.table.row,
   title: theme.paper.title,
+  tableDisabledRow: theme.table.disabledRow,
+  tableDisabledCell: theme.table.disabledCell,
   tableContainer: {
     overflow: 'auto',
   },
@@ -35,20 +37,30 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function BeneficiaryDuplicatesTable({
-  headers, rows, setAdditionalData, beneficiaryUuids,
+  headers, rows, setAdditionalData, completedData,
 }) {
   const classes = useStyles();
   const [selectedCells, setSelectedCells] = useState([]);
   const [selectedRow, setSelectedRow] = useState(null);
+  const [dontMergeRows, setDontMergeRows] = useState([]);
+  const [fieldValues, setFieldValues] = useState({});
 
   useEffect(() => {
+    const filteredIds = rows
+      .filter((row, index) => !dontMergeRows.includes(index))
+      .map((row) => row.beneficiaryId);
+    const parsedFieldValues = selectedCells.reduce((acc, cell) => {
+      acc[cell.header] = cell.value ?? '';
+      return acc;
+    }, {});
+    setFieldValues(parsedFieldValues);
     const additionalData = (
-      { values: selectedCells.map((cell) => ({ [cell.header]: cell.value })), beneficiaryIds: beneficiaryUuids }
+      { values: fieldValues, beneficiaryIds: filteredIds }
     );
     // eslint-disable-next-line max-len
     const additionalDataString = `{\\"values\\": ${JSON.stringify(additionalData.values).replace(/"/g, '\\"')},\\"beneficiaryIds\\": ${JSON.stringify(additionalData.beneficiaryIds).replace(/"/g, '\\"')}}`;
     setAdditionalData(additionalDataString);
-  }, [selectedCells]);
+  }, [selectedCells, dontMergeRows]);
   const isCellSelected = (rowIndex, header) => selectedCells.some(
     (cell) => cell.rowIndex === rowIndex && cell.header === header,
   );
@@ -71,6 +83,10 @@ function BeneficiaryDuplicatesTable({
 
   const handleCellClick = (rowIndex, header, value) => {
     if (header === 'individual') {
+      return;
+    }
+
+    if (dontMergeRows.includes(rowIndex)) {
       return;
     }
 
@@ -108,12 +124,41 @@ function BeneficiaryDuplicatesTable({
     }
   };
 
+  const handleMergeCheckboxChange = (rowIndex) => {
+    if (!dontMergeRows.includes(rowIndex)) {
+      clearRowSelection(rowIndex);
+      setDontMergeRows([...dontMergeRows, rowIndex]);
+    } else {
+      const index = dontMergeRows.indexOf(rowIndex);
+      if (index !== -1) {
+        const newDontMergeRows = [...dontMergeRows];
+        newDontMergeRows.splice(index, 1);
+        setDontMergeRows(newDontMergeRows);
+      }
+    }
+  };
+
+  // eslint-disable-next-line max-len
+  const shouldHoverCell = (rowIndex, header) => !isCellSelected(rowIndex, header) && header !== 'individual' && !dontMergeRows.includes(rowIndex);
+  const shouldDisableCell = (rowIndex) => dontMergeRows.includes(rowIndex);
+
+  useEffect(() => {
+    if (completedData) {
+      const numberOfRows = Array.from(Array(rows.length).keys());
+      clearAllCellSelection();
+      setDontMergeRows(numberOfRows);
+    }
+  }, [completedData]);
+
   return (
     <div className={classes.tableContainer}>
       <TableContainer className={classes.paper}>
         <Table size="small" className={classes.table} aria-label="dynamic table">
           <TableHead className={classes.header}>
             <TableRow className={classes.header}>
+              <TableCell key="checkbox-header-merge" className={classes.checkboxCell}>
+                <FormattedMessage module="deduplication" id="BeneficiaryDuplicatesTable.merge.header" />
+              </TableCell>
               <TableCell key="checkbox-header" className={classes.checkboxCell}>
                 <FormattedMessage module="deduplication" id="BeneficiaryDuplicatesTable.checkbox.header" />
               </TableCell>
@@ -128,19 +173,28 @@ function BeneficiaryDuplicatesTable({
                 key={rowIndex}
                 className={classes.tableRow}
               >
+                <TableCell key={`merge-cell-${rowIndex}`} className={classes.checkboxCell}>
+                  <Checkbox
+                    color="primary"
+                    checked={dontMergeRows.includes(rowIndex) && !completedData}
+                    onChange={() => handleMergeCheckboxChange(rowIndex)}
+                    disabled={completedData}
+                  />
+                </TableCell>
                 <TableCell key={`checkbox-cell-${rowIndex}`} className={classes.checkboxCell}>
                   <Checkbox
                     color="primary"
                     checked={rowIndex === selectedRow}
                     onChange={() => handleCheckboxChange(rowIndex)}
+                    disabled={shouldDisableCell(rowIndex)}
                   />
                 </TableCell>
                 {headers.map((header, headerIndex) => (
                   <TableCell
                     key={headerIndex}
                     className={`${isCellSelected(rowIndex, header) ? classes.selectedCell : ''} ${
-                      !isCellSelected(rowIndex, header) && header !== 'individual' ? classes.hoverableCell : ''
-                    } ${header === 'individual' ? classes.tableDisabledCell : ''}`}
+                      shouldHoverCell(rowIndex, header) ? classes.hoverableCell : ''
+                    } ${shouldDisableCell(rowIndex) ? classes.tableDisabledCell : ''}`}
                     onClick={() => handleCellClick(rowIndex, header, row[header])}
                   >
                     {row[header]}
@@ -148,6 +202,23 @@ function BeneficiaryDuplicatesTable({
                 ))}
               </TableRow>
             ))}
+            <TableRow
+              className={classes.tableRow}
+            >
+              <TableCell className={classes.checkboxCell} />
+              <TableCell className={classes.checkboxCell}>
+                <FormattedMessage module="deduplication" id="BeneficiaryDuplicatesTable.output" />
+              </TableCell>
+              {headers.map((header, headerIndex) => (
+                <TableCell
+                  key={headerIndex}
+                  className={`${classes.tableDisabledCell} 
+                  ${completedData ? classes.selectedCell : ''}`}
+                >
+                  {Object.prototype.hasOwnProperty.call(fieldValues, header) ? fieldValues[header] : rows[0][header]}
+                </TableCell>
+              ))}
+            </TableRow>
           </TableBody>
         </Table>
       </TableContainer>
