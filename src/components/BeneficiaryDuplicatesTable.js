@@ -34,6 +34,9 @@ const useStyles = makeStyles((theme) => ({
   deactivatedRow: {
     opacity: 0.5,
   },
+  strikethrough: {
+    textDecoration: 'line-through',
+  },
 }));
 
 function BeneficiaryDuplicatesTable({
@@ -49,14 +52,14 @@ function BeneficiaryDuplicatesTable({
     const filteredIds = rows
       .filter((row, index) => !dontMergeRows.includes(index))
       .map((row) => row.beneficiaryId);
-    const parsedFieldValues = selectedCells.reduce((acc, cell) => {
-      acc[cell.header] = cell.value ?? '';
-      return acc;
+    const parsedFieldValues = selectedCells.reduce((accumulation, cell) => {
+      accumulation[cell.header] = cell.value ?? '';
+      return accumulation;
     }, {});
-    setFieldValues(parsedFieldValues);
     const additionalData = (
-      { values: fieldValues, beneficiaryIds: filteredIds }
+      { values: parsedFieldValues, beneficiaryIds: filteredIds }
     );
+    setFieldValues(parsedFieldValues);
     // eslint-disable-next-line max-len
     const additionalDataString = `{\\"values\\": ${JSON.stringify(additionalData.values).replace(/"/g, '\\"')},\\"beneficiaryIds\\": ${JSON.stringify(additionalData.beneficiaryIds).replace(/"/g, '\\"')}}`;
     setAdditionalData(additionalDataString);
@@ -141,6 +144,10 @@ function BeneficiaryDuplicatesTable({
   // eslint-disable-next-line max-len
   const shouldHoverCell = (rowIndex, header) => !isCellSelected(rowIndex, header) && header !== 'individual' && !dontMergeRows.includes(rowIndex);
   const shouldDisableCell = (rowIndex) => dontMergeRows.includes(rowIndex);
+  const shouldCrossText = (rowIndex) => rows[rowIndex]?.is_deleted;
+  const isDontMereChecked = (rowIndex) => (
+    (dontMergeRows.includes(rowIndex) && !completedData) || (completedData && !rows[rowIndex]?.is_deleted)
+  );
 
   useEffect(() => {
     if (completedData) {
@@ -174,12 +181,16 @@ function BeneficiaryDuplicatesTable({
                 className={classes.tableRow}
               >
                 <TableCell key={`merge-cell-${rowIndex}`} className={classes.checkboxCell}>
-                  <Checkbox
-                    color="primary"
-                    checked={dontMergeRows.includes(rowIndex) && !completedData}
-                    onChange={() => handleMergeCheckboxChange(rowIndex)}
-                    disabled={completedData}
-                  />
+                  {rowIndex
+                    ? (
+                      <Checkbox
+                        color="primary"
+                        checked={isDontMereChecked(rowIndex)}
+                        onChange={() => handleMergeCheckboxChange(rowIndex)}
+                        disabled={completedData}
+                      />
+                    )
+                    : <FormattedMessage module="deduplication" id="BeneficiaryDuplicatesTable.oldest" />}
                 </TableCell>
                 <TableCell key={`checkbox-cell-${rowIndex}`} className={classes.checkboxCell}>
                   <Checkbox
@@ -192,9 +203,12 @@ function BeneficiaryDuplicatesTable({
                 {headers.map((header, headerIndex) => (
                   <TableCell
                     key={headerIndex}
-                    className={`${isCellSelected(rowIndex, header) ? classes.selectedCell : ''} ${
-                      shouldHoverCell(rowIndex, header) ? classes.hoverableCell : ''
-                    } ${shouldDisableCell(rowIndex) ? classes.tableDisabledCell : ''}`}
+                    className={`
+                    ${isCellSelected(rowIndex, header) ? classes.selectedCell : ''} 
+                    ${shouldHoverCell(rowIndex, header) ? classes.hoverableCell : ''} 
+                    ${shouldDisableCell(rowIndex) ? classes.tableDisabledCell : ''}
+                    ${shouldCrossText(rowIndex) ? classes.strikethrough : ''}
+                    `}
                     onClick={() => handleCellClick(rowIndex, header, row[header])}
                   >
                     {row[header]}
