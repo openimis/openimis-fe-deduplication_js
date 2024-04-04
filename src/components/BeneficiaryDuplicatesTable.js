@@ -98,6 +98,7 @@ function BeneficiaryDuplicatesTable({
 
     if (isCellClicked) {
       clearCellSelection(rowIndex, header);
+      setSelectedRow(null);
       return;
     }
 
