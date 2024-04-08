@@ -11,5 +11,8 @@
     "deduplication.deduplicationSummaryTable.duplicates": "Duplicates",
     "deduplication.tasks.deduplication.title": "Benefit Plan Deduplication Task",
     "deduplication.deduplicate.mutation.createTasks": "Deduplication tasks have been created.",
-    "deduplication.BeneficiaryDuplicatesTable.checkbox.header": "Select all columns"
+    "deduplication.BeneficiaryDuplicatesTable.checkbox.header": "Select all columns",
+    "deduplication.BeneficiaryDuplicatesTable.merge.header": "Don't merge",
+    "deduplication.BeneficiaryDuplicatesTable.output": "OUTPUT:",
+    "deduplication.BeneficiaryDuplicatesTable.oldest": "Oldest"
 }
