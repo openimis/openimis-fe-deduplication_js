@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { injectIntl } from 'react-intl';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { formatMessage } from '@openimis/fe-core';
+import { formatMessage, injectIntl } from '@openimis/fe-core';
 import { styled } from '@mui/material/styles';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -13,7 +12,7 @@ import DeduplicationSummaryTable from '../tables/DeduplicationSummaryTable';
 import { createDeduplicationTasks, fetchDeduplicationSummary } from '../../actions';
 
 const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
-  ...theme.paper?.item ?? {},
+  ...(theme.paper?.item ?? {}),
 }));
 
 function DeduplicationSummaryDialog({
@@ -42,11 +41,13 @@ function DeduplicationSummaryDialog({
     <Dialog
       open={showSummaryDialog}
       onClose={handleClose}
-      PaperProps={{
-        style: {
-          width: 900,
-          maxWidth: 900,
-        },
+      slotProps={{
+        paper: {
+          style: {
+            width: 900,
+            maxWidth: 900,
+          },
+        }
       }}
     >
       <DialogTitle
